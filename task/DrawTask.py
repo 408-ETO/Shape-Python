@@ -1,5 +1,5 @@
 from .ProtoType import Task
-from math import sin,cos,pi,sqrt
+from math import sin, cos, pi, sqrt
 from numpy import linspace
 
 
@@ -12,14 +12,13 @@ class Line(Task):
 
     def onMousePress(self, e):
         self.coords_0 = (e.x, e.y)
-        self.item = self.app.canvas.create_line(e.x, e.y, e.x, e.y) 
+        self.item = self.app.canvas.create_line(e.x, e.y, e.x, e.y)
 
     def onMouseMove(self, e):
         self.app.canvas.coords(self.item, (*self.coords_0, e.x, e.y))
 
-    def onMouseRelease(self,e):
-        x0,y0 = self.coords_0
-        self.app.items_center[self.item] = ((e.x+x0)/2,(e.y+y0)/2)
+    def onMouseRelease(self, e):
+        x0, y0 = self.coords_0
 
 
 class Shape(Task):
@@ -50,10 +49,9 @@ class P2Shape(Shape):
     def onMouseMove(self, e):
         coords = self.calculate_coords(e)
         self.app.canvas.coords(self.item, coords)
-    
-    def onMouseRelease(self,e):
+
+    def onMouseRelease(self, e):
         cx, cy = self.center
-        self.app.items_center[self.item] = (cx,cy)
 
 
 class Rectangle(P2Shape):
@@ -79,19 +77,21 @@ class Square(P2Shape):
         cx, cy, dx, dy = super().calculate_coords(target)
         return cx-dx, cy-dy, cx+dy, cy-dx, cx+dx, cy+dy, cx-dy, cy+dx
 
+
 class Oval(P2Shape):
     name = '绘制椭圆'
     accelerator = 'Control-O'
 
     def __init__(self, app):
         super().__init__(app)
-    
+
     def calculate_coords(self, target):
         cx, cy, dx, dy = super().calculate_coords(target)
         coords = tuple()
-        for theta in linspace(0,2*pi,36):
-            coords += (cx+dx*cos(theta),cy+dy*sin(theta))
+        for theta in linspace(0, 2*pi, 36):
+            coords += (cx+dx*cos(theta), cy+dy*sin(theta))
         return coords
+
 
 class Circle(P2Shape):
     name = '绘制圆形'
@@ -99,13 +99,13 @@ class Circle(P2Shape):
 
     def __init__(self, app):
         super().__init__(app)
-    
+
     def calculate_coords(self, target):
         cx, cy, dx, dy = super().calculate_coords(target)
         r = sqrt(dx**2+dy**2)
         coords = tuple()
-        for theta in linspace(0,2*pi,36):
-            coords += (cx+r*cos(theta),cy+r*sin(theta))
+        for theta in linspace(0, 2*pi, 36):
+            coords += (cx+r*cos(theta), cy+r*sin(theta))
         return coords
 
 
@@ -115,7 +115,7 @@ class Triangle(Shape):
 
     def __init__(self, app):
         super().__init__(app)
-        self.coords = []
+        self.coords = tuple()
         self.item = None
 
     def onMousePress(self, e):
@@ -125,16 +125,11 @@ class Triangle(Shape):
                 *self.coords, fill=self.fill, outline=self.outline)
 
     def onMouseRelease(self, e):
-        self.coords.append(e.x)
-        self.coords.append(e.y)
+        self.coords += (e.x, e.y)
         if len(self.coords) is 6:
-            x0,y0,x1,y1,x2,y2 = self.coords
-            self.app.items_center[self.item] = ((x0+x1+x2)/3,(y0+y1+y2)/3)
-            self.coords = []
+            self.coords = tuple()
             self.item = None
 
     def onMouseMove(self, e):
         if self.item:
             self.app.canvas.coords(self.item, (*self.coords, e.x, e.y))
-
-

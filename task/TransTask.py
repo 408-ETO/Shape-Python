@@ -11,7 +11,7 @@ class Transform(Task):
         self.item = self.app.canvas.find_overlapping(
             e.x-1, e.y-1, e.x+1, e.y+1)
         if self.item:
-            self.item = self.item[0]
+            self.item = self.item[-1]
         self.xy = e
 
     def onMouseRelease(self, e):
@@ -30,14 +30,6 @@ class Translate(Transform):
             dx, dy = e.x-self.xy.x, e.y-self.xy.y
             self.app.canvas.move(self.item, dx, dy)
             self.xy = e
-            cx, cy = self.app.items_center[self.item]
-            self.app.items_center[self.item] = (cx+dx, cy+dy)
-
-
-def complex_transform(x, y, zt):
-    z0 = complex(x, y)
-    z1 = zt*z0
-    return z1.real, z1.imag
 
 
 class RotateZoom(Transform):
@@ -49,20 +41,17 @@ class RotateZoom(Transform):
 
     def onMouseMove(self, e):
         if self.item:
-            old_coords = [*self.app.canvas.coords(self.item)]
-            new_coords = []
-            cx, cy = self.app.items_center[self.item]
-            ax, ay = self.xy.x, self.xy.y
-            bx, by = e.x, e.y
-            za = complex((ax-cx), (ay-cy))
-            zb = complex((bx-cx), (by-cy))
-            zt = zb/za
-            while old_coords:
-                x = old_coords.pop(0)
-                y = old_coords.pop(0)
-                dx, dy = x-cx, y-cy
-                dx, dy = complex_transform(dx, dy, zt)
-                new_coords.append(cx+dx)
-                new_coords.append(cy+dy)
+            old_coords, new_coords = self.app.canvas.coords(self.item), tuple()
+            xs, ys = old_coords[::2], old_coords[1::2]
+            n = len(xs)
+            xc, yc = sum(xs)/n, sum(ys)/n
+            zc = complex(xc, yc)
+            za = complex(self.xy.x, self.xy.y)
+            zb = complex(e.x, e.y)
+            zt = (zb-zc)/(za-zc)
+            for x, y in zip(xs, ys):
+                z0 = complex(x, y)
+                z = zc + zt*(z0-zc)
+                new_coords += (z.real, z.imag)
             self.app.canvas.coords(self.item, new_coords)
             self.xy = e

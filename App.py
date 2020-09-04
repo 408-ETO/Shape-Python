@@ -10,10 +10,6 @@ class App(Tk):
 
         self.statusBar = StatusBar(self)
 
-        self.items_center = {}
-
-        self._task = None
-
         self.barMenu = BarMenu(self)
         self.config(menu=self.barMenu)
 
@@ -45,5 +41,4 @@ class App(Tk):
 
 
 if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    App().mainloop()
