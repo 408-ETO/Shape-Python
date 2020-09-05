@@ -17,9 +17,6 @@ class Line(Task):
     def onMouseMove(self, e):
         self.app.canvas.coords(self.item, (*self.coords_0, e.x, e.y))
 
-    def onMouseRelease(self, e):
-        x0, y0 = self.coords_0
-
 
 class Shape(Task):
     name = '封闭图形'
@@ -49,9 +46,6 @@ class P2Shape(Shape):
     def onMouseMove(self, e):
         coords = self.calculate_coords(e)
         self.app.canvas.coords(self.item, coords)
-
-    def onMouseRelease(self, e):
-        cx, cy = self.center
 
 
 class Rectangle(P2Shape):

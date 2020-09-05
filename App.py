@@ -19,7 +19,9 @@ class App(Tk):
         self.canvas.bind('<ButtonPress-1>', self.onMousePress)
         self.canvas.bind('<B1-Motion>', self.onMouseMove)
         self.canvas.bind('<ButtonRelease-1>', self.onMouseRelease)
+
         self.task = None
+        self.color = 'blue'
 
     @property
     def task(self):
