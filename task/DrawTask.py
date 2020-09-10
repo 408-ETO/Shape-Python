@@ -114,7 +114,7 @@ class Triangle(Shape):
 
     def onMousePress(self, e):
         if not self.item:
-            self.coords = [e.x, e.y]
+            self.coords = (e.x, e.y)
             self.item = self.app.canvas.create_polygon(
                 *self.coords, fill=self.fill, outline=self.outline)
 
