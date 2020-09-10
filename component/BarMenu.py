@@ -33,6 +33,7 @@ class BarMenu(Menu):
         self.add_command(label="选择颜色", command=self.choose_color)
 
         self.add_command(label="截图保存", command=self.getter)
+        self.add_command(label="清屏",command=self.clear)
         # self.fileMenu = Menu(self,tearoff=False)
         # self.fileMenu.add_command(label="导入")
         # self.fileMenu.add_command(label="保存")
@@ -47,8 +48,11 @@ class BarMenu(Menu):
     def getter(self):
         widget = self.app.canvas
         widget.update()
-        x = self.app.winfo_rootx() +widget.winfo_x()
+        self.app.update()
+        x = self.app.winfo_rootx()+widget.winfo_x()
         y = self.app.winfo_rooty()+widget.winfo_y()
-        x1 = x+widget.winfo_width()
-        y1 = y+widget.winfo_height()
-        ImageGrab.grab().crop((x, y, x1, y1)).save("first.jpg")
+        x1 = x+ widget.winfo_width()
+        y1 = y+ widget.winfo_height()
+        ImageGrab.grab().crop((x, y, x1, y1)).save("output.jpg")
+    def clear(self):
+        self.app.canvas.delete(ALL)

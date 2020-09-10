@@ -6,6 +6,9 @@ class App(Tk):
     def __init__(self):
         super().__init__()
         
+
+        self.title('408无敌绘图软件')
+
         self.canvas = Canvas(self, width=800, height=600)
 
         self.statusBar = StatusBar(self)
