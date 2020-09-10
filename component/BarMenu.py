@@ -28,6 +28,7 @@ class BarMenu(Menu):
 
         self.add_command(label="选择颜色",command=self.choose_color)
 
+        self.add_command(label="清屏",command=self.clear)
         # self.fileMenu = Menu(self,tearoff=False)
         # self.fileMenu.add_command(label="导入")
         # self.fileMenu.add_command(label="保存")
@@ -37,3 +38,6 @@ class BarMenu(Menu):
     def choose_color(self):
         (rgb,hx) = colorchooser.askcolor()
         self.app.color = hx
+
+    def clear(self):
+        self.app.canvas.delete(ALL)
