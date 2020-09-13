@@ -5,6 +5,7 @@ from component import *
 class App(Tk):
     def __init__(self):
         super().__init__()
+        
 
         self.title('408绘图软件')
 
